@@ -39,10 +39,6 @@ class Test_Reports(db.Model):
 
 def get_test_reports(squad, daysToFollow):
     query = Test_Reports.query
-    print("\n")
-    print("\n")
-    print("\n")
-    print("1st one: ",query.all())
     if not squad and not daysToFollow:
         return query.order_by(Test_Reports.id.desc()).all()
 
@@ -56,9 +52,7 @@ def get_test_reports(squad, daysToFollow):
     query = query.order_by(Test_Reports.id.desc())
 
     if daysToFollow:
-        print("daysToFollow",daysToFollow)
         query = query.limit(daysToFollow)
-        print("after days limit ",query.all())
     
     return query.all()
 
