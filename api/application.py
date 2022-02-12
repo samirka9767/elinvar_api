@@ -24,18 +24,15 @@ def get_test_results_with_parameters():
 def add_test_results():
     #remove later
     args = request.args
-    (squad, status, failedTests) = (request.args.get("squad"), request.args.get("status"), request.args.get("failedTests"))
     status_ls = ["passed", "failed"]
+    (squad, status, failedTests) = (request.args.get("squad"), request.args.get("status") if request.args.get("status") in status_ls else None , request.args.get("failedTests"))
     if squad is None or status is None: 
         abort(400, 'squad and status not found')
     squad_query = find_squad(squad)
     if squad_query == None:
         abort(400, 'no such squad exists')
-    if status not in status_ls:
-        abort(400, 'incorect status value entered')
     #will remove later    
     date__ = args.get("addDummyDates")
-    print(type(failedTests))
     try:
         noffailures = int(failedTests) if failedTests is not None  else 0 
     except ValueError:
