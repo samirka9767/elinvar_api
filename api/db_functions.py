@@ -39,18 +39,29 @@ class Test_Reports(db.Model):
 
 def get_test_reports(squad, daysToFollow):
     query = Test_Reports.query
-    print(query)
+    print("\n")
+    print("\n")
+    print("\n")
+    print("1st one: ",query.all())
     if not squad and not daysToFollow:
-        print(query.order_by(Test_Reports.id.desc()).all())
         return query.order_by(Test_Reports.id.desc()).all()
 
     if squad:
-        squad_query = Squad.query.filter_by(name=squad).first()
-        query = query.filter_by(squad_id=squad_query.id)
+        squad_query = find_squad(squad)
+        if squad_query:
+            query = query.filter_by(squad_id=squad_query.id)
+        else: 
+            return []
 
     query = query.order_by(Test_Reports.id.desc())
 
     if daysToFollow:
+        print("daysToFollow",daysToFollow)
         query = query.limit(daysToFollow)
+        print("after days limit ",query.all())
     
     return query.all()
+
+
+def find_squad(squad):
+    return Squad.query.filter_by(name=squad).first()
