@@ -20,10 +20,9 @@ def get_test_results_with_parameters():
 
 @app.route('/addTestResult', methods=['POST'])
 def add_test_results():
+    noffailures = 0
     status_ls = ["passed", "failed"]
-    (squad, status, failedTests) = (
-    request.args.get("squad"), request.args.get("status") if request.args.get("status") in status_ls else None,
-    request.args.get("failedTests"))
+    (squad, status, failedTests) = (request.args.get("squad"), request.args.get("status") if request.args.get("status") in status_ls else None, request.args.get("failedTests"))
     if squad is None or status is None:
         abort(400, 'squad and status not found')
     squad_query = find_squad(squad)
@@ -36,7 +35,6 @@ def add_test_results():
     today = date.today()
     record = Test_Reports(squad_id=squad_query.id, date=str(today.strftime("%m/%d/%Y")), status=status_ls.index(status),
                           failed_tests=noffailures)
-    # record = Test_Reports(squad_id=squad_query.id, date=date__, status=status_ls.index(status), failed_tests=noffailures)
     db.session.add(record)
     db.session.commit()
     return {"id": record.id, "squad_id": record.squad_id, "date": record.date, "status": record.status,
