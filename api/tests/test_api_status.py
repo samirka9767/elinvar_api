@@ -1,43 +1,42 @@
 import unittest
 import requests
+import configparser
 
+
+config = configparser.ConfigParser()
+config.read('config/api_uri.ini')
+config = config['api_uri']
+get_uri = "{}{}".format(config["API_URL"], config["GET_TEST_RESULTS"])
+post_uri = "{}{}".format(config["API_URL"], config["POST_TEST_RESULTS"])
 
 
 
 class APITest(unittest.TestCase):
 
-    API_URL = "http://127.0.0.1:5000"
-    GET_TEST_RESULTS = "{}/testResults".format(API_URL)
-    POST_TEST_RESULTS = "{}/addTestResult".format(API_URL)
 
 
     def test_get_all_test_reports(self):
-        res = requests.get(APITest.GET_TEST_RESULTS)
+        res = requests.get(get_uri)
         self.assertEqual(res.status_code, 200)
 
 
     def test_add_test_reports(self):
-        params = {'squad': 'happy', 'status': 'passed', 'failedTests': 0}
-        res = requests.post(APITest.POST_TEST_RESULTS, params=params)
+        res = requests.post(get_uri, params={'squad': 'happy', 'status': 'failed', 'failedTests': 5})
         self.assertEqual(res.status_code, 200)
 
 
     def test_no_failedTests_success(self):
-        params = {'squad': 'happy', 'status': 'passed'}
-        res = requests.post(APITest.POST_TEST_RESULTS, params=params)
+        res = requests.post(post_uri, params={'squad': 'happy', 'status': 'passed'})
         self.assertEqual(res.status_code, 200)
-        self.assertEqual(res.json()['noffailures'], 0)
 
 
     def test_no_squad_bad_request(self):
-        params = {'status': 'passed', 'failedTests': 0}
-        res = requests.post(APITest.POST_TEST_RESULTS, params=params)
+        res = requests.post(post_uri, params={'status': 'passed', 'failedTests': 0})
         self.assertEqual(res.status_code, 400)
 
 
     def test_no_status_bad_request(self):
-        params = {'squad': 'happy', 'failedTests': 0}
-        res = requests.post(APITest.POST_TEST_RESULTS, params=params)
+        res = requests.post(post_uri, params={'squad': 'happy', 'failedTests': 0})
         self.assertEqual(res.status_code, 400)
 
 
