@@ -29,6 +29,15 @@ The project runs with Flask, for that few environment variables need to be set u
 
 Note: if you quit the terminal, every time to run the project with flask the environment variables need to be set up first, before doing flask run
 
+Note: There are 2 tables in the db, one holds squad/team names and ids (table_name Squad), the other one holds test reports of teams (table_name Test_Reports).
+
+Squad table has already 3 teams entered, and cannot be manipulated. 
+
+When adding a test report to Test_Reports table, current (today's) date will be saved for that test. 
+
+
+
+
 To run the tests in cli, use the following command:
 
     python3 -m unittest tests/*.py
