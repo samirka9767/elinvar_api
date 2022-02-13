@@ -29,7 +29,9 @@ The project runs with Flask, for that few environment variables need to be set u
 
 Note: if you quit the terminal, every time to run the project with flask the environment variables need to be set up first, before doing flask run
 
+To run the tests in cli, use the following command:
 
+    python3 -m unittest tests/*.py
 
 
 
