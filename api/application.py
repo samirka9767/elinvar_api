@@ -22,8 +22,6 @@ def get_test_results_with_parameters():
 
 @app.route('/addTestResult', methods=['POST'])
 def add_test_results():
-    #remove later
-    args = request.args
     status_ls = ["passed", "failed"]
     (squad, status, failedTests) = (request.args.get("squad"), request.args.get("status") if request.args.get("status") in status_ls else None , request.args.get("failedTests"))
     if squad is None or status is None: 
@@ -31,15 +29,13 @@ def add_test_results():
     squad_query = find_squad(squad)
     if squad_query == None:
         abort(400, 'no such squad exists')
-    #will remove later    
-    date__ = args.get("addDummyDates")
     try:
         noffailures = int(failedTests) if failedTests is not None  else 0 
     except ValueError:
         abort(400, "failedTests must be decimal")
     today = date.today()
-    # record = Test_Reports(squad_id=squad_query.id, date=str(today.strftime("%m/%d/%Y")), status=status_ls.index(status), failed_tests=noffailures)
-    record = Test_Reports(squad_id=squad_query.id, date=date__, status=status_ls.index(status), failed_tests=noffailures)
+    record = Test_Reports(squad_id=squad_query.id, date=str(today.strftime("%m/%d/%Y")), status=status_ls.index(status), failed_tests=noffailures)
+    # record = Test_Reports(squad_id=squad_query.id, date=date__, status=status_ls.index(status), failed_tests=noffailures)
     db.session.add(record)
     db.session.commit()
     return {"id": record.id, "squad_id": record.squad_id, "date": record.date, "status": record.status,
